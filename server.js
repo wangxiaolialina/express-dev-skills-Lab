@@ -3,10 +3,10 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+const methodOverride = require('method-override');
 var indexRouter = require('./routes/index');
-const skillsRouter = require('./routes/index')
-var showRouter = require('./routes/show');
+const skillsRouter = require('./routes/skills')
+
 
 var app = express();
 
@@ -19,10 +19,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'));
+
+app.use(function(req, res, next) {
+  console.log('Hello WDI!');
+  req.time = new Date().toLocaleTimeString();
+  next();
+});
 
 app.use('/', indexRouter);
 app.use('/skills',skillsRouter);
-app.use('/show', showRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
